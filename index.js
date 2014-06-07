@@ -1,8 +1,8 @@
 // effect
-// event supported
 // delay supported
 
-var $ = require('jquery');
+var $ = require('jquery'),
+    Events = require('events');
 
 var defaults = {
     triggerType: 'click',
@@ -15,6 +15,9 @@ var Tabber = function (options) {
     this.$panels = $(this.o.panels);
     this._init();
 };
+
+// mixin
+Events.mixTo(Tabber);
 
 Tabber.prototype._bind = function () {
     var _this = this;
@@ -29,11 +32,13 @@ Tabber.prototype._bind = function () {
 Tabber.prototype.show = function (index) {
     this.$tabItems.eq(index).addClass(this.o.tabActiveClass).siblings().removeClass(this.o.tabActiveClass);
     this.$panels.eq(index).show().siblings().hide();
+    this.trigger('show', index);
 };
 
 Tabber.prototype._init = function () {
     this._bind();
     this.$tabItems.eq(this.o.tabActiveIndex).trigger(this.o.triggerType);
+    this.trigger('init');
 };
 
 module.exports = Tabber;
